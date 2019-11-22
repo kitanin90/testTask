@@ -1,79 +1,50 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 
 from .models import Assignment, Book, User
 from .serializers import UserSerializer, BookSerializer, AssignmentSerializer
 
 
-class AssignmentView(APIView):
-    def get(self, request):
-        assignments = Assignment.objects.all()
-        serializer = AssignmentSerializer(assignments, many=True)
-        return Response({"assignments": serializer.data})
+class AssignmentView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    queryset = Assignment.objects.all()
+    serializer_class = AssignmentSerializer
 
-    def post(self, request):
-        assigment = request.data.get('assigment')
-        serializer = AssignmentSerializer(data=assigment)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
-        if serializer.is_valid(raise_exception=True):
-            assigment_saved = serializer.save()
-        return Response({"Успешно": "Назначение '{} - {}' создано успешно".format(assigment_saved.book,
-                                                                                  assigment_saved.name)})
+    def perform_create(self, serializer):
+        user = get_object_or_404(User, id=self.request.data.get('user'))
+        book = get_object_or_404(Book, id=self.request.data.get('book'))
+        return serializer.save(user=user, book=book)
 
-    def put(self, request, pk):
-        saved_assignment = get_object_or_404(Assignment.objects.all(), pk=pk)
-        data = request.data.get('assignment')
-        serializer = AssignmentSerializer(instance=saved_assignment, data=data, partial=True)
-
-        if serializer.is_valid(raise_exception=True):
-            assigment_saved = serializer.save()
-        return Response({"Успешно": "Изменены '{} - {}'".format(assigment_saved.book,
-                                                                assigment_saved.name)})
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
-class BookView(APIView):
-    def get(self, request):
-        books = Book.objects.all()
-        serializer = BookSerializer(books, many=True)
-        return Response({"books": serializer.data})
+class BookView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
 
-    def post(self, request):
-        book = request.data.get('book')
-        serializer = BookSerializer(data=book)
-        if serializer.is_valid(raise_exception=True):
-            book_saved = serializer.save()
-        return Response({"Успешно": "Книга '{}' добавлена успешно".format(book_saved.title)})
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
-    def put(self, request, pk):
-        saved_book = get_object_or_404(Book.objects.all(), pk=pk)
-        data = request.data.get('book')
-        serializer = BookSerializer(instance=saved_book, data=data, partial=True)
+    def perform_create(self, serializer):
+        return serializer.save()
 
-        if serializer.is_valid(raise_exception=True):
-            book_saved = serializer.save()
-        return Response({"Успешно": "Изменена книга - '{}'".format(book_saved.title)})
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
-class UserView(APIView):
-    def get(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response({"users": serializer.data})
+class UserView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-    def post(self, request):
-        user = request.data.get('user')
-        serializer = UserSerializer(data=user)
-        if serializer.is_valid(raise_exception=True):
-            user_saved = serializer.save()
-        return Response({"Успешно": "Пользователь '{}' добавлен успешно".format(user_saved.name)})
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
-    def put(self, request, pk):
-        saved_user = get_object_or_404(User.objects.all(), pk=pk)
-        data = request.data.get('book')
-        serializer = BookSerializer(instance=saved_user, data=data, partial=True)
+    def perform_create(self, serializer):
+        return serializer.save()
 
-        if serializer.is_valid(raise_exception=True):
-            user_saved = serializer.save()
-        return Response({"Успешно": "Изменен пользователь - '{}'".format(user_saved.name)})
-
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
