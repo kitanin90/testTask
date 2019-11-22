@@ -33,8 +33,10 @@ class Book(models.Model):
 
 class Assignment(models.Model):
     user = models.ForeignKey('User', related_name='Assignments', on_delete=models.CASCADE)
-    book = models.ForeignKey('Book', related_name='Assignments', on_delete=models.CASCADE)
-    fullname = '{} - {}'.format(user, book)
+    # book = models.ForeignKey('Book', related_name='Assignments', on_delete=models.CASCADE)
+    book = models.OneToOneField(Book, on_delete=models.CASCADE)
+
+    fullname = '{}-{}'.format(user, book)
 
     def __str__(self):
         return self.fullname
