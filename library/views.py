@@ -2,7 +2,10 @@ from rest_framework.generics import get_object_or_404, ListCreateAPIView, Retrie
 
 from .models import Assignment, Book, User
 from .serializers import UserSerializer, BookSerializer, AssignmentSerializer
+from django.http import HttpResponse
 
+import csv
+from djqscsv import write_csv
 
 # Assignment
 class AssignmentView(ListCreateAPIView):
@@ -46,3 +49,10 @@ class UserView(ListCreateAPIView):
 class SingleUserView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+# # Upload CSV
+# def upload_csv(request):
+#     assignment_date = Assignment.objects.values('user', 'book')
+#     with open('csvfile.csv', "wb") as csvfile:
+#         write_csv(assignment_date, csvfile)

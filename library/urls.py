@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from . import views
 
 app_name = "assignments"
 
@@ -15,4 +16,8 @@ urlpatterns = [
     #users
     path('users/', UserView.as_view()),
     path('users/<int:pk>', SingleUserView.as_view()),
+
+    #Upload CSV
+    # path('upload/', views.upload_csv),
+
 ]
