@@ -4,10 +4,8 @@
 ---
 * В терминате ввести команду `https://github.com/kitanin90/testTask.git`
 
-* Создать миграцию `python manage.py makemigrations`
-* Выполнить миграцию `python manage.py migrate`
-* Создать суперюзера `python manage.py createsuperuser`
-* Запустить сервер `python manage.py runserver`
+* Запустить установщик `docker-compose up --build`
+* Запустить `docker-compose up` или остановить `docker-compose down`
 
 Работа с сервером
 ---
