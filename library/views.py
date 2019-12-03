@@ -51,8 +51,3 @@ class SingleUserView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
 
 
-# # Upload CSV
-# def upload_csv(request):
-#     assignment_date = Assignment.objects.values('user', 'book')
-#     with open('csvfile.csv', "wb") as csvfile:
-#         write_csv(assignment_date, csvfile)
